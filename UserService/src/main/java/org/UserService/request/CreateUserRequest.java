@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.UserService.customAnnotation.AgeLimit;
 import org.UserService.model.User;
-import org.UserService.model.UserIdentifier;
+import org.Utils.UserIdentifier;
 
 @Getter
 @Setter

@@ -1,8 +1,8 @@
-package org.UserService.configuration;
+package org.TxnService.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.UserService.service.UserService;
+import org.TxnService.service.TxnService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,22 +13,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 public class SecurityConfig {
 
     @Autowired
-    private UserService userService;
+    private TxnService txnService;
 
-    @Autowired
-    private KafkaConfig config;
+    @Value("${admin.authority}")
+    private String adminAuthority;
+
+    @Value("${user.authority}")
+    private String userAuthority;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new
                 DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService);
-        authenticationProvider.setPasswordEncoder(config.getPSEncode());
+        authenticationProvider.setUserDetailsService(txnService);
+        authenticationProvider.setPasswordEncoder(getPSEncode());
         return authenticationProvider;
     }
 
@@ -36,15 +38,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/user/getUser/**").hasAnyAuthority("ADMIN","USER","SERVICE")
-                .anyRequest()
-                .permitAll()
+//                .requestMatchers("/txn/initTxn/**").hasAuthority(userAuthority)
+                .anyRequest().permitAll()
         ).formLogin(withDefaults()).httpBasic(withDefaults()).csrf(csrf -> csrf.disable());
         return http.build();
     }
 
-
-
-
-
+    @Bean
+    public PasswordEncoder getPSEncode(){
+        return new BCryptPasswordEncoder();
+    }
 }

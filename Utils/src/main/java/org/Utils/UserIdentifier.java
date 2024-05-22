@@ -1,4 +1,4 @@
-package org.UserService.model;
+package org.Utils;
 
 public enum UserIdentifier {
 

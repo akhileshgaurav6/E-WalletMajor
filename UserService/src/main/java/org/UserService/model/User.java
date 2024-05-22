@@ -2,9 +2,10 @@ package org.UserService.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.Utils.UserIdentifier;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
+//import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,11 +52,18 @@ public class User implements Serializable, UserDetails {
     @Enumerated
     private UserIdentifier userIdentifier;   //kind of identification from which user wants to  identify
 
+    @Enumerated
+    private UserStatus userStatus;
+
+    @Enumerated
+    private UserType userType;
+
+
     private String userIdentifierValue;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(authority.split("")).map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
+        return Arrays.stream(authority.split(",")).map(authority -> new SimpleGrantedAuthority(authority)).collect(Collectors.toList());
     }
 
     @Override

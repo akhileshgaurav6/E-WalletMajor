@@ -4,6 +4,20 @@ public class CommonConstants {
 
     public static final String USER_CREATION_TOPIC = "user_created";
 
+    public static final String TXN_INITIATED_TOPIC = "txn_initiated";
+
+    public static final String TXN_UPDATED_TOPIC = "txn_updated";
+
+    public static final String TXN_UPDATED_TOPIC_TXNID = "TXN_UPDATED_TOPIC_TXNID";
+    public static final String TXN_UPDATED_TOPIC_STATUS = "TXN_UPDATED_TOPIC_STATUS";
+    public static final String TXN_UPDATED_TOPIC_MESSAGE = "TXN_UPDATED_TOPIC_MESSAGE";
+
+
+    public static final String TXN_INITIATED_TOPIC_SENDER = "TXN_INITIATED_TOPIC_SENDER";
+    public static final String TXN_INITIATED_TOPIC_RECEIVER = "TXN_INITIATED_TOPIC_RECEIVER";
+    public static final String TXN_INITIATED_TOPIC_TXNID = "TXN_INITIATED_TOPIC_TXNID";
+    public static final String TXN_INITIATED_TOPIC_AMOUNT = "TXN_INITIATED_TOPIC_AMOUNT";
+
     public static final String USER_CREATION_TOPIC_NAME = "USER_CREATION_TOPIC_NAME";
 
     public static final String USER_CREATION_TOPIC_ID = "USER_CREATION_TOPIC_ID";

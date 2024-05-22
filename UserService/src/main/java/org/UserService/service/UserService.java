@@ -2,6 +2,8 @@ package org.UserService.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.UserService.model.UserStatus;
+import org.UserService.model.UserType;
 import org.Utils.CommonConstants;
 import org.UserService.model.User;
 import org.UserService.repository.UserRepository;
@@ -36,8 +38,8 @@ public class UserService implements UserDetailsService {
        User user = createUserRequest.toUser();
         user.setAuthority(userAuthority);
         user.setPassword(encoder.encode(createUserRequest.getPassword()));
-//        user.setUserStatus(UserStatus.ACTIVE);
-//        user.setUserType(UserType.USER);
+        user.setUserStatus(UserStatus.ACTIVE);
+        user.setUserType(UserType.USER);
         userRepository.save(user);
         // onc the user is created i have to send a notification
 
@@ -52,8 +54,9 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByPhoneNo(username);
+    public User loadUserByUsername(String contact) throws UsernameNotFoundException {
+        return userRepository.findByPhoneNo(contact);
     }
 }

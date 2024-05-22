@@ -6,10 +6,7 @@ import org.UserService.model.User;
 import org.UserService.request.CreateUserRequest;
 import org.UserService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -21,5 +18,10 @@ public class UserController {
     @PostMapping("/create")
     public User createUser(@RequestBody @Valid CreateUserRequest createUserRequest) throws JsonProcessingException {
         return userService.createUser(createUserRequest);
+    }
+
+    @GetMapping("/getUser")    // we want to call userService method in txnService
+    public User findUser(@RequestParam("contact") String contact){
+        return userService.loadUserByUsername(contact);
     }
 }

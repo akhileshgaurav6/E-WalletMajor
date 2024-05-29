@@ -1,6 +1,7 @@
 package org.TxnService.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.TxnService.model.Txn;
 import org.TxnService.model.TxnStatus;
 import org.TxnService.repository.TxnRepository;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,8 +25,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TxnService implements UserDetailsService {
@@ -36,6 +40,9 @@ public class TxnService implements UserDetailsService {
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -43,7 +50,9 @@ public class TxnService implements UserDetailsService {
         header.setBasicAuth("txn-service" , "txn-service");
         HttpEntity request = new HttpEntity(header);
         JSONObject jsonObject = restTemplate.exchange("http://localhost:9091/user/getUser?contact="+username, HttpMethod.GET,request, JSONObject.class).getBody();
-        User user = new User((String)jsonObject.get("username"), (String)jsonObject.get("password"),(List<GrantedAuthority>)jsonObject.get("authority"));
+        List<LinkedHashMap<String, String>> authorities = (List<LinkedHashMap<String, String>>)jsonObject.get("authorities");
+        List<GrantedAuthority> list = authorities.stream().map(x -> x.get("authority")).map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList());
+        User user = new User((String)jsonObject.get("username"), (String)jsonObject.get("password"),list);
         return user;
 
     }
